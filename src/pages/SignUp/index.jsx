@@ -6,8 +6,12 @@ import bg from "../../assets/bg.svg";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const Login = () => {
-  const [credentials, setCredentials] = useState({ email: "", password: "" });
+const SignUp = () => {
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+    userName: "",
+  });
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -64,6 +68,23 @@ const Login = () => {
                     </div>
                   </div>
                   <div className="line">
+                    <label htmlFor="username">UserName </label>
+                    <div className="field">
+                      <input
+                        type="text"
+                        className="input"
+                        placeholder=""
+                        onChange={(e) => {
+                          console.log(e.target.value);
+                          setCredentials({
+                            ...credentials,
+                            userName: e.target.value,
+                          });
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="line">
                     <label htmlFor="email">Password</label>
                     <div className="field">
                       <input
@@ -92,19 +113,21 @@ const Login = () => {
                         e.preventDefault();
                         try {
                           const formData = new FormData();
-                          const { email, password } = credentials;
+                          const { email, password, userName } = credentials;
                           formData.append("email", email);
                           formData.append("password", password);
-                          
+                          formData.append("username", userName);
+
                           const response = await axios.post(
-                            "http://localhost/linkedin_clone_backend/signin.php",
+                            "http://localhost/linkedin_clone_backend/signup.php",
                             formData
                           );
 
                           console.log(response.data);
 
                           if (response.data.status === "success") {
-                            navigate("/sign-up");
+                            console.log("login success");
+                            navigate("/");
                           } else {
                             setError(
                               "Login failed. Please check your credentials."
@@ -154,4 +177,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;
